@@ -1,78 +1,67 @@
-const bodyElement = document.getElementById("main")
+const bodyElement = document.getElementById("main");
 
-/*const datePickerElement = document.getElementById()
+let boxElement = document.createElement("div");
 
-datePickerElement.addEventListener("change", () => {
+boxElement.setAttribute("class", "box");
 
-})*/
+let title = document.createElement("h1");
 
-let titulo = document.createElement("h1")
+title.textContent = "Date Management";
 
-titulo.textContent = "Gestión de fechas"
+boxElement.append(title);
 
-bodyElement.append(titulo)
+let fechaHoy = new Date();
+let date = new Date(2025, 7, 10, 0, 0);
 
-let fechaHoy = new Date()
-let date = new Date(2024, 7, 10, 0, 0)
+let countdown = document.createElement("p");
+boxElement.append(countdown);
 
-console.log(`%cgetDay: %c${date.getDay()}`,` font-weight: bold; color: blue;`, "");
-console.log(`%cgetFullYear: %c${date.getFullYear()}`,` font-weight: bold; color: blue;`, ""); 
-console.log(`%cgetMonth (0 es enero): %c${date.getMonth()}`,` font-weight: bold; color: blue;`, ""); 
-console.log(`%cgetDate (día del mes): %c${date.getDate()}`,` font-weight: bold; color: blue;`, ""); 
-console.log(`%cgetHours: %c${date.getHours()}`,` font-weight: bold; color: blue;`, "");
-console.log(`%cgetMinutes: %c${date.getMinutes()}`,` font-weight: bold; color: blue;`, "");
-console.log(`%cgetSeconds: %c${date.getSeconds()}`,` font-weight: bold; color: blue;`, "");
-console.log(`%cgetTime (milisegundos): %c${date.getTime()}`,` font-weight: bold; color: blue;`, ""); 
-console.log(`%ctoDateString: %c${date.toDateString()}`,` font-weight: bold; color: blue;`, "");
-console.log(`%ctoLocaleDateString: %c${date.toLocaleDateString()}`,` font-weight: bold; color: blue;`, "");
-console.log(`%ctoJSON: %c${date.toJSON()}`,` font-weight: bold; color: blue;`, "");
-console.log(`%ctoTimeString: %c${date.toTimeString()}`,` font-weight: bold; color: blue;`, "");
-console.log(`%ctoLocaleTimeString: %c${date.toLocaleTimeString()}`,` font-weight: bold; color: blue;`, "");
-console.log(`%ctoString: %c${date.toString()}`,` font-weight: bold; color: blue;`, "");
-console.log(`%ctoLocaleString: %c${date.toLocaleString()}`,` font-weight: bold; color: blue;`, "");
+now = new Date();
+let difference = date - now;
 
-let months = document.createElement("span")
-let days = document.createElement("span")
-let hours = document.createElement("span")
-let minutes = document.createElement("span")
+function currentCounter() {
+    if(date > now){
+        let totalDays = Math.trunc(difference / (1000 * 60 * 60 * 24));
+        let months = Math.trunc(totalDays / 30);
+        let days = totalDays % 30;
+        let hours = Math.trunc((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        let minutes = Math.trunc((difference % (1000 * 60 * 60)) / (1000 * 60));
+        let seconds = Math.trunc((difference % (1000 * 60)) / 1000);
 
-bodyElement.append(months)
-bodyElement.append(days)
-bodyElement.append(hours)
-bodyElement.append(minutes)
+        if(months >= 1){
+            countdown.setAttribute("class", "green");
+        } else if(days < 7) {
+            countdown.setAttribute("class", "red");
+        } else if(months < 1) {
+            countdown.setAttribute("class", "orange");
+        }
 
-let msSeconds = 1000
-let msMinutes = msSeconds * 60
-let msHours = msMinutes * 60
-let msDays = msHours * 24
-let msMonths = msHours * 30
-
-
-let nombreIntervalo = setInterval(()=>{
-    let now = new Date()
-    let duration = date - now
-    let remainigDays = Math.floor(duration / msDays)
-    
-    days.textContent = remainigDays
-}, 1000)
-
-
-
-
-
-
-
-/*let number = now.getTime()
-
-let timeElement
-
-timeElement.innerText = number
-
-let counter = setInterval(() => {
-    number--
-    timeElement.innerText = number
-
-    if(){
-        clearInterval(counter)
+        countdown.textContent = `${months} months, ${days} days, ${hours} hours, ${minutes} minutes, ${seconds} seconds`;
+    } else {
+        countdown.textContent = `Happy Birthday!!!`;
+        clearInterval(nombreIntervalo);
     }
-}, 1000)*/
+    difference -= 1000;
+}
+
+let nombreIntervalo = setInterval(currentCounter, 1000);
+
+let datePickerElement = document.createElement("input");
+datePickerElement.setAttribute("type", "date");
+boxElement.append(datePickerElement);
+
+bodyElement.append(boxElement);
+
+datePickerElement.addEventListener("change", init);
+
+function init() {
+    let userDate = new Date(datePickerElement.value);
+
+    if (userDate < now) {
+        alert("The date entered has already passed");
+        userDate = date;
+    }
+
+    difference = userDate - now;    
+}
+currentCounter();
